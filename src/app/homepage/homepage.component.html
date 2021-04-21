@@ -1,0 +1,44 @@
+<div>
+  <h3>Notification Service and Data Scraping</h3>
+  <form>
+    <div class="col-4">
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="API URL" id="input" aria-label="API URL"
+          aria-describedby="basic-addon2">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" style=background-color:rgb(0,162,255) type="button"
+            (click)=submitUrl() type="reset" value="reset">Submit Url</button>
+        </div>
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Check URL" id="urlInput" aria-label="Check Url"
+          aria-describedby="basic-addon2">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" style=background-color:rgb(0,162,255) type="button"
+            (click)=checkSaved() type="reset" value="reset">Check URL</button>
+        </div>
+      </div>
+      <div>
+        URL entered was: {{url}}
+      </div>
+      <div style="color:red">
+        {{errorMessage}}
+      </div>
+      <div>
+        {{backendMessage}}
+      </div>
+      <div>
+        <button class="btn btn-outline-secondary" style=background-color:rgb(0,162,255) type="button"
+          (click)=submitCheckboxes() type="reset" value="reset">Submit Check Boxes</button>
+      </div>
+      <div>
+        <div class="form-check" *ngFor="let checkboxes of checkboxList">
+          <input class="form-check-input" type="checkbox" value="" id=checkboxes (click)=append($event,checkboxes)>>
+          <label class="form-check-label" for="flexCheckDefault">
+            {{checkboxes}}
+          </label>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
