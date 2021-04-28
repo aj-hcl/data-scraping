@@ -10,39 +10,48 @@ import { GetUrlService } from '../services/get-url.service';
 })
 export class HomepageComponent implements OnInit {
   public url: string;
-  public backendData = new Array<string>();
+  public backendTags = new Array<string>();
   public checkboxList = new Array<string>();
   public checkboxesChecked = new Array<string>();
-  public errorMessage: string;
-  public backendMessage: string;
-  public checkUrl: string;
-  public savedData = new Array<string>();
+  public userMessage: string;
+  //table data
+  public data = new Array<string>();
+  public headers = new Array<string>();
+  public tagName = new Array<string>();
+  public tagData = new Array<string>();
+  public tagKey = new Array<string>();
+
 
   constructor(private getURLService: GetUrlService) {
 
   }
 
   ngOnInit(): void {
-
+    this.hideTable();
+    this.hideButton();
   }
 
   public submitUrl() {
-    this.checkboxesChecked = [];
+    this.checkboxList, this.checkboxesChecked = [];
     var input = ((document.getElementById("input") as HTMLInputElement).value);
     this.url = input;
     this.checkboxesChecked.push(this.url);
+    this.userMessage = ("The URL entered was: " + input);
+    this.hideTable();
 
     this.getURLService.getUrl(input).subscribe((result) => {
-      this.backendData = result;
+      this.backendTags = result;
       this.createCheckboxes();
     });
   }
 
   // go through array being received from backend and push to checkboxList array in order to display on UI
   public createCheckboxes() {
-    for (var i = 0; i < this.backendData.length; i++) {
-      this.checkboxList.push(JSON.stringify(this.backendData[i]).replace(/"/g, "'"));
+    for (var i = 0; i < this.backendTags.length; i++) {
+      this.checkboxList.push(JSON.stringify(this.backendTags[i]).replace(/"/g, "'"));
     }
+    var button = document.getElementById("submitChecks");
+    button.style.display = "block";
   }
 
   // append checked checkboxes to array that can be sent to the backend
@@ -54,35 +63,42 @@ export class HomepageComponent implements OnInit {
       const index = this.checkboxesChecked.indexOf(checked);
       this.checkboxesChecked.splice(index, 1);
     }
-    console.log(this.checkboxesChecked);
   }
 
   public submitCheckboxes() {
-    var checks;
-    checks = this.checkboxesChecked;
-    if (checks.length > 1) {
-      this.getURLService.sendChecked(checks).subscribe((result) => {
-        console.log(result.message);
-        this.backendMessage = ("Message from database: " + result.message);
-        this.checkboxesChecked = [];
-        this.checkboxesChecked.push(this.url);
+    if (this.checkboxesChecked.length > 1) {
+      this.getURLService.sendCheckboxes(this.checkboxesChecked).subscribe((result) => {
+        this.userMessage = ("Message from database: " + result.message);
       });
     }
     else {
-      this.errorMessage = "Error: Please check at least one checkbox.";
-      this.checkboxesChecked = [];
-      this.checkboxesChecked.push(this.url);
+      this.userMessage = "Error: Please check at least one checkbox.";
     }
+    this.checkboxesChecked = [];
+    this.checkboxesChecked.push(this.url);
   }
 
-  public checkSaved() {
+  public getTable() {
+    this.checkboxList = [];
     var input = ((document.getElementById("urlInput") as HTMLInputElement).value);
-    this.checkUrl = input;
+    this.url = input;
+    this.userMessage = ("The URL entered was: " + input);
 
-    this.getURLService.getSaved(input).subscribe((result) => {
-      this.savedData = result;
-      this.backendMessage = ("Message from database: " + result.message);
-      console.log(result);
+    this.getURLService.generateTable(input).subscribe((result) => {
+      this.data = result.tags;
+      var table = document.getElementById("tagTable");
+      table.style.display = "table";
+      this.hideButton();
     });
+  }
+
+  public hideTable() {
+    var table = document.getElementById("tagTable");
+    table.style.display = "none";
+  }
+
+  public hideButton() {
+    var button = document.getElementById("submitChecks");
+    button.style.display = "none";
   }
 }

@@ -1,0 +1,17 @@
+.center{
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+  
+.centered{
+    margin: auto;
+    width: 40%;
+    padding: 10px;
+}
+  
+.margin{
+    display: flex;
+    justify-content: center;
+    margin: 15px;
+}    

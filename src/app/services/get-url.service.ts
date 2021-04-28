@@ -21,13 +21,13 @@ export class GetUrlService {
     return this.http.post<any>(this.sendUrlAPI, body, { headers });
   }
 
-  sendChecked(checkboxesChecked: Array<string>): Observable<any> {
+  sendCheckboxes(checkboxesChecked: Array<string>): Observable<any> {
     const headers = { 'Content-Type': 'application/json' };
     const body = { 'checkboxesChecked': checkboxesChecked };
     return this.http.post<any>(this.sendCheckedAPI, body, { headers });
   }
 
-  getSaved(url: string): Observable<any> {
+  generateTable(url: string): Observable<any> {
     const headers = { 'Content-Type': 'application/json' };
     const body = { 'url': url };
     return this.http.put<any>(this.sendCheckedAPI, body, { headers });
